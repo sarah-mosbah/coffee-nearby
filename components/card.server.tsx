@@ -4,11 +4,11 @@ import Link from "next/link";
 type CardType = {
   name: string;
   href: string;
-  image: string;
+  imageUrl: string;
 };
 
 export default function Card(props: CardType) {
-  const { name, href, image } = props;
+  const { name, href, imageUrl } = props;
   return (
     <Link href={href} className="m-auto rounded-xl border-gray-400 shadow-2xl">
       <div className="glass min-h-[200px] rounded-xl px-5 pb-5 pt-1 backdrop-blur-3xl">
@@ -20,7 +20,7 @@ export default function Card(props: CardType) {
         <div className="relative w-full h-48">
           <Image
             className="rounded-lg shadow-lg"
-            src={image}
+            src={imageUrl}
             layout="fill"
             objectFit="cover"
             alt={"Coffee Store Image"}

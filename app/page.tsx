@@ -1,23 +1,33 @@
-import Banner from "@/components/banner.client";
 import Card from "@/components/card.server";
-import Link from "next/link";
+import { fetchCoffeeStores } from "./lib/coffee-stores";
+import Banner from "@/components/banner.client";
+import { CoffeeStoreType } from "@/app/types";
 
-export default function Home() {
-  const coffeeStoreId = "tbs";
+const getData = async (): Promise<CoffeeStoreType[]> => {
+  return fetchCoffeeStores();
+};
+
+export default async function Home() {
+  const coffeeStores = await getData();
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className="mb-56">
+      <main className="mx-auto mt-10 max-w-6xl px-4">
         <Banner />
-        <div>
+        <div className="mt-20">
           <h2 className="mt-8 pb-8 text-4xl font-bold text-white">
-            Toronto Coffee Stores
+            Dubai Stores
           </h2>
-          <Card
-            name="The Best Store"
-            href={`/coffee-store/${coffeeStoreId}`}
-            image="/static/hero-image.png"
-          />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-2 lg:grid-cols-3 lg:gap-6">
+            {coffeeStores.map((coffeeStore, idx: number) => (
+              <Card
+                key={`${coffeeStore.name}-${coffeeStore.id}`}
+                name={coffeeStore.name}
+                imageUrl={coffeeStore.imageUrl}
+                href={`/coffee-store/${coffeeStore.id}?id=${idx}`}
+              />
+            ))}
+          </div>
         </div>
       </main>
     </div>
