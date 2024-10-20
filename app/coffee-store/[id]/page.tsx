@@ -3,13 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { CoffeeStoreType } from "@/app/types";
 import { fetchCoffeeStore, fetchCoffeeStores } from "@/app/lib/coffee-stores";
+import { DUBAI_LONG_LAT } from "@/app/lib/constants";
 
 const getData = async (id: string): Promise<CoffeeStoreType> => {
   return fetchCoffeeStore(id);
 };
 
 export async function generateStaticParams() {
-  const response: CoffeeStoreType[] = await fetchCoffeeStores();
+  const response: CoffeeStoreType[] = await fetchCoffeeStores(DUBAI_LONG_LAT);
 
   return response.map((coffee) => ({ id: coffee.id }));
 }
@@ -35,6 +36,7 @@ export default async function Page(props: { params: { id: string } }) {
             }
             width={740}
             height={360}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="max-h-[420px] min-w-full max-w-full rounded-lg border-2 sepia lg:max-w-[470px] "
             alt={"Coffee Store Image"}
           />
