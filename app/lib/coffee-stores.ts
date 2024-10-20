@@ -13,10 +13,12 @@ const transformCoffeeStore = (
   };
 };
 
-export const fetchCoffeeStores = async (longLat: string) => {
+export const fetchCoffeeStores = async (longLat: string, limit: number) => {
   try {
     const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/coffee.json?proximity=${longLat}&access_token=${process.env.NEXT_PUBLIC_MAP_BOX_API}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/coffee.json?limit=${limit++}&proximity=${longLat}&access_token=${
+        process.env.MAP_BOX_API
+      }`
     );
 
     const data = await response.json();
@@ -38,7 +40,7 @@ export const fetchCoffeeStores = async (longLat: string) => {
 
 export const fetchCoffeeStore = async (id: string) => {
   const response = await fetch(
-    `https://api.mapbox.com/geocoding/v5/mapbox.places/${id}.json?access_token=${process.env.NEXT_PUBLIC_MAP_BOX_API}`
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${id}.json?access_token=${process.env.MAP_BOX_API}`
   );
 
   const data = await response.json();
@@ -57,11 +59,13 @@ export const fetchCoffeeStore = async (id: string) => {
 const getListOfCoffeeStorePhotos = async () => {
   try {
     const response = await fetch(
-      `https://api.unsplash.com/search/photos/?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}&query="coffee shop"&page=1&perPage=10&orientation=landscape`
+      `https://api.unsplash.com/search/photos/?client_id=${process.env.UNSPLASH_ACCESS_KEY}&query="coffee shop"&page=1&perPage=10&orientation=landscape`
     );
     const photos = await response.json();
     const results = photos?.results || [];
-    return results?.map((result: { urls: any }) => result.urls["small"]);
+    return results?.map(
+      (result: { urls: Record<string, string> }) => result.urls["small"]
+    );
   } catch (error) {
     console.error("Error retrieving a photo", error);
   }

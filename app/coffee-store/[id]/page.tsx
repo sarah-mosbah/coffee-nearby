@@ -10,7 +10,10 @@ const getData = async (id: string): Promise<CoffeeStoreType> => {
 };
 
 export async function generateStaticParams() {
-  const response: CoffeeStoreType[] = await fetchCoffeeStores(DUBAI_LONG_LAT);
+  const response: CoffeeStoreType[] = await fetchCoffeeStores(
+    DUBAI_LONG_LAT,
+    10
+  );
 
   return response.map((coffee) => ({ id: coffee.id }));
 }

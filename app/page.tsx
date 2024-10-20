@@ -3,10 +3,9 @@ import { fetchCoffeeStores } from "./lib/coffee-stores";
 import { CoffeeStoreType } from "@/app/types";
 import NearbyStores from "@/components/nearby-stores.client";
 import { DUBAI_LONG_LAT } from "./lib/constants";
-import { useTrackLocation } from "@/hooks/useTrackLocation";
 
 const getData = async (): Promise<CoffeeStoreType[]> => {
-  return fetchCoffeeStores(DUBAI_LONG_LAT);
+  return fetchCoffeeStores(DUBAI_LONG_LAT, 10);
 };
 
 export default async function Home() {

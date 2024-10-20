@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Banner from "./banner.client";
 import { useTrackLocation } from "@/hooks/useTrackLocation";
-import { fetchCoffeeStores } from "@/app/lib/coffee-stores";
+
 import Card from "./card.server";
 import { CoffeeStoreType } from "@/app/types";
 export default function NearbyStores() {
@@ -21,9 +21,18 @@ export default function NearbyStores() {
 
   useEffect(() => {
     const fetchStoresNearby = async () => {
-      if (longLat) {
-        const coffeStores = await fetchCoffeeStores(longLat);
-        setCoffeesNearby(coffeStores);
+      try {
+        if (longLat) {
+          const response = await fetch(
+            `/api/getCoffeeStoresByLocation?longLat=${longLat}&limit=10`
+          );
+
+          const coffeStores: CoffeeStoreType[] = await response.json();
+
+          setCoffeesNearby(coffeStores);
+        }
+      } catch (error) {
+        console.error("error", error);
       }
     };
 
@@ -38,21 +47,24 @@ export default function NearbyStores() {
       />
 
       {locationErrorMessage && <p>Error: {locationErrorMessage}</p>}
-      <div className="mt-20">
-        <h2 className="mt-8 pb-8 text-4xl font-bold text-white">
-          Stores Near Me
-        </h2>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-2 lg:grid-cols-3 lg:gap-6">
-          {coffeesNearby.map((coffeeStore, idx: number) => (
-            <Card
-              key={`${coffeeStore.name}-${coffeeStore.id}`}
-              name={coffeeStore.name}
-              imageUrl={coffeeStore.imageUrl}
-              href={`/coffee-store/${coffeeStore.id}?id=${idx}`}
-            />
-          ))}
+
+      {coffeesNearby.length > 0 && (
+        <div className="mt-20">
+          <h2 className="mt-8 pb-8 text-4xl font-bold text-white">
+            Stores Near Me
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-2 lg:grid-cols-3 lg:gap-6">
+            {coffeesNearby.map((coffeeStore, idx: number) => (
+              <Card
+                key={`${coffeeStore.name}-${coffeeStore.id}`}
+                name={coffeeStore.name}
+                imageUrl={coffeeStore.imageUrl}
+                href={`/coffee-store/${coffeeStore.id}?id=${idx}`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
