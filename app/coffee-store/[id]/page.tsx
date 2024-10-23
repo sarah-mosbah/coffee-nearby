@@ -5,13 +5,15 @@ import { CoffeeStoreType } from "@/app/types";
 import { fetchCoffeeStore, fetchCoffeeStores } from "@/app/lib/coffee-stores";
 import { DUBAI_LONG_LAT } from "@/app/lib/constants";
 import { createCoffeeStore } from "@/app/lib/airtable";
+import Upvote from "@/components/up-vote.client";
 
 const getData = async (id: string): Promise<CoffeeStoreType> => {
   const mapBoxCoffeStore = await fetchCoffeeStore(id);
 
   const coffeeStore = await createCoffeeStore(id, mapBoxCoffeStore);
+  const voting = coffeeStore?.voting ?? 0;
 
-  return coffeeStore;
+  return { ...mapBoxCoffeStore, voting };
 };
 
 export async function generateStaticParams() {
@@ -25,12 +27,14 @@ export async function generateStaticParams() {
 
 export default async function Page(props: { params: { id: string } }) {
   const { id } = props.params;
-  const { imageUrl = "", address = "", name = "" } = await getData(id);
+  const { imageUrl = "", address = "", name = "", voting } = await getData(id);
+
+  const btnClickHandler = () => void {};
 
   return (
     <div className="h-full pb-80">
       <div className="m-auto grid max-w-full px-12 py-12 lg:max-w-6xl lg:grid-cols-2 lg:gap-4">
-        <div className="">
+        <div>
           <div className="mb-2 mt-24 text-lg font-bold">
             <Link href="/">← Back to home</Link>
           </div>
@@ -56,6 +60,7 @@ export default async function Page(props: { params: { id: string } }) {
               <p className="pl-2">{address}</p>
             </div>
           )}
+          <Upvote voting={voting} />
         </div>
       </div>
     </div>
