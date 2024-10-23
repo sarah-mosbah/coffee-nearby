@@ -11,4 +11,11 @@ export type CoffeeStoreType = {
   name: string;
   address: string;
   imageUrl: string;
+  voting: number;
+};
+
+export type AirTableRecordType = {
+  fields: CoffeeStoreType;
+  recordId: string;
+  id: string;
 };

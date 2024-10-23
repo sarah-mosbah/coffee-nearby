@@ -4,9 +4,14 @@ import Image from "next/image";
 import { CoffeeStoreType } from "@/app/types";
 import { fetchCoffeeStore, fetchCoffeeStores } from "@/app/lib/coffee-stores";
 import { DUBAI_LONG_LAT } from "@/app/lib/constants";
+import { createCoffeeStore } from "@/app/lib/airtable";
 
 const getData = async (id: string): Promise<CoffeeStoreType> => {
-  return fetchCoffeeStore(id);
+  const mapBoxCoffeStore = await fetchCoffeeStore(id);
+
+  const coffeeStore = await createCoffeeStore(id, mapBoxCoffeStore);
+
+  return coffeeStore;
 };
 
 export async function generateStaticParams() {
