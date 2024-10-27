@@ -2,12 +2,14 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { CoffeeStoreType, Props } from "@/app/types";
-import { fetchCoffeeStore, fetchCoffeeStores } from "@/app/lib/coffee-stores";
-import { DUBAI_LONG_LAT } from "@/app/lib/constants";
+import { fetchCoffeeStore } from "@/app/lib/coffee-stores";
+
 import { createCoffeeStore } from "@/app/lib/airtable";
 import Upvote from "@/components/up-vote.client";
 import { Metadata } from "next";
 import { getDomain } from "@/app/utils";
+
+export const revalidate = 0;
 
 const getData = async (id: string): Promise<CoffeeStoreType> => {
   const mapBoxCoffeStore = await fetchCoffeeStore(id);
@@ -17,15 +19,6 @@ const getData = async (id: string): Promise<CoffeeStoreType> => {
 
   return { ...mapBoxCoffeStore, voting };
 };
-
-export async function generateStaticParams() {
-  const response: CoffeeStoreType[] = await fetchCoffeeStores(
-    DUBAI_LONG_LAT,
-    10
-  );
-
-  return response.map((coffee) => ({ id: coffee.id }));
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = params;
@@ -44,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page(props: { params: { id: string } }) {
   const { id } = props.params;
+
   const { imageUrl = "", address = "", name = "", voting } = await getData(id);
 
   return (
@@ -75,7 +69,7 @@ export default async function Page(props: { params: { id: string } }) {
               <p className="pl-2">{address}</p>
             </div>
           )}
-          <Upvote coffeeStore={{ voting, id }} />
+          <Upvote voting={voting} id={id} />
         </div>
       </div>
     </div>

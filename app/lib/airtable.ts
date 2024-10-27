@@ -19,7 +19,7 @@ export const findRecordByFilter = async (id: string) => {
       id,
       name: record.fields.name as string,
       address: record.fields.address as string,
-      imageUrl: record.fields.imgUrl as string,
+      imageUrl: record.fields.imageUrl as string,
       voting: record.fields.voting as number,
     },
     recordId: record.id,
@@ -68,7 +68,6 @@ export const updateCoffeeStore = async (id: string) => {
         ])) as unknown as AirTableRecordType[];
 
         if (updatedRecords.length > 0) {
-          console.log("Created a store with id", id);
           return getMinifiedRecords(updatedRecords);
         }
       } else {

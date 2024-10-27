@@ -1,11 +1,13 @@
 "use client";
-import { useFormState, useFormStatus } from "react-dom";
+
 import { upvoteAction } from "@/actions";
-import { CoffeeStoreType } from "@/app/types";
 import Image from "next/image";
 
-function SubmitButton() {
+import { useFormState, useFormStatus } from "react-dom";
+
+export function SubmitButton() {
   const { pending } = useFormStatus();
+
   return (
     <button
       type="submit"
@@ -15,32 +17,34 @@ function SubmitButton() {
     >
       {pending ? (
         <Image
-          alt="loading"
           src="/static/loading-spinner.svg"
           width="30"
           height="30"
+          alt="Loading"
           className="m-auto"
         />
       ) : (
-        "Upvote"
+        "Up vote!"
       )}
     </button>
   );
 }
 
-export default function Upvote({
-  coffeeStore,
-}: {
-  coffeeStore: Pick<CoffeeStoreType, "id" | "voting">;
-}) {
-  const [state, dispatch] = useFormState(upvoteAction, coffeeStore);
+export default function Upvote({ voting, id }: { voting: number; id: string }) {
+  const initialState = {
+    id,
+    voting,
+  };
+
+  const [state, dispatch] = useFormState(upvoteAction, initialState);
 
   return (
     <form action={dispatch}>
-      <div className="flex mb-6">
+      <div className="mb-6 flex">
         <Image src="/static/star.svg" width="24" height="24" alt="star icon" />
         <p className="pl-2">{state.voting}</p>
       </div>
+
       <SubmitButton />
     </form>
   );
