@@ -1,7 +1,7 @@
 import { AirTableRecordType, CoffeeStoreType } from "../types";
+import Airtable, { FieldSet } from "airtable";
 
-var Airtable = require("airtable");
-var base = new Airtable({ apiKey: process.env.AIRTABLE_TOKEN }).base(
+const base = new Airtable({ apiKey: process.env.AIRTABLE_TOKEN }).base(
   "appt7KiwlOeL9vTTl"
 );
 
@@ -14,12 +14,17 @@ export const findRecordByFilter = async (id: string) => {
     })
     .firstPage();
 
-  const allRecords: AirTableRecordType[] = records.map(
-    (record: AirTableRecordType) => ({
-      fields: { ...record.fields },
-      recordId: record.id,
-    })
-  );
+  const allRecords: AirTableRecordType[] = records.map((record) => ({
+    fields: {
+      id,
+      name: record.fields.name as string,
+      address: record.fields.address as string,
+      imageUrl: record.fields.imgUrl as string,
+      voting: record.fields.voting as number,
+    },
+    recordId: record.id,
+    id,
+  }));
 
   return allRecords;
 };
