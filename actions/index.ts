@@ -12,7 +12,7 @@ export const upvoteAction = async (prevState: State): Promise<State> => {
   const data = await updateCoffeeStore(id);
 
   return {
-    voting: data.voting,
+    voting: data?.[0].voting ?? 0,
     id,
   };
 };

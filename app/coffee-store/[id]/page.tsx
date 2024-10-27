@@ -13,7 +13,7 @@ const getData = async (id: string): Promise<CoffeeStoreType> => {
   const mapBoxCoffeStore = await fetchCoffeeStore(id);
 
   const coffeeStore = await createCoffeeStore(id, mapBoxCoffeStore);
-  const voting = coffeeStore?.voting ?? 0;
+  const voting = coffeeStore.voting ?? 0;
 
   return { ...mapBoxCoffeStore, voting };
 };

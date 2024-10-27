@@ -1,5 +1,5 @@
 import { AirTableRecordType, CoffeeStoreType } from "../types";
-import Airtable, { FieldSet } from "airtable";
+import Airtable from "airtable";
 
 const base = new Airtable({ apiKey: process.env.AIRTABLE_TOKEN }).base(
   "appt7KiwlOeL9vTTl"
@@ -36,13 +36,13 @@ export const createCoffeeStore = async (
   const records = await findRecordByFilter(id);
 
   if (records.length == 0) {
-    const createNewRecord = await table.create({
+    const createNewRecord = (await table.create({
       id,
       name: coffeeStore.name,
       address: coffeeStore.address,
       imageUrl: coffeeStore.imageUrl,
       voting: coffeeStore.voting ?? 0,
-    });
+    })) as unknown as AirTableRecordType;
 
     return { ...createNewRecord.fields, recordId: createNewRecord.id };
   }
@@ -52,30 +52,41 @@ export const createCoffeeStore = async (
 
 export const updateCoffeeStore = async (id: string) => {
   try {
-    const records = await findRecordByFilter(id);
+    if (id) {
+      const records = await findRecordByFilter(id);
+      if (records.length !== 0) {
+        const record = records[0];
+        const updatedVoting = record.fields.voting + 1;
 
-    if (records.length != 0) {
-      const voting = (records[0].fields.voting ?? 0) + 1;
-
-      const updatedRecord = await table.update([
-        {
-          id: records[0].recordId,
-          fields: {
-            voting,
+        const updatedRecords = (await table.update([
+          {
+            id: record.recordId,
+            fields: {
+              voting: updatedVoting,
+            },
           },
-        },
-      ]);
+        ])) as unknown as AirTableRecordType[];
 
-      if (updatedRecord.length === 1) {
-        console.log("Updated Store with Id", id);
-        return { ...updatedRecord[0].fields, recordId: updatedRecord[0].id };
+        if (updatedRecords.length > 0) {
+          console.log("Created a store with id", id);
+          return getMinifiedRecords(updatedRecords);
+        }
       } else {
-        return {};
+        console.log("Coffee store does not exist");
       }
+    } else {
+      console.error("Store id is missing");
     }
-
-    return records[0];
   } catch (error) {
-    console.error("Coffee Store Doesnt exist");
+    console.error("Error upvoting a coffee store", error);
   }
+};
+
+const getMinifiedRecords = (records: Array<AirTableRecordType>) => {
+  return records.map((record) => {
+    return {
+      recordId: record.id,
+      ...record.fields,
+    };
+  });
 };
