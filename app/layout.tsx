@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, AR_One_Sans } from "next/font/google";
 import "./globals.css";
+import { getDomain } from "./utils";
 
 const ibmPlexSans = IBM_Plex_Sans({
   display: "swap",
@@ -18,6 +19,10 @@ const arOneSans = AR_One_Sans({
 export const metadata: Metadata = {
   title: "Coffee Nearby",
   description: "Find your perfect cup of coffee",
+  metadataBase: getDomain(),
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({

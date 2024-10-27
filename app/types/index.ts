@@ -19,3 +19,8 @@ export type AirTableRecordType = {
   recordId: string;
   id: string;
 };
+
+export type Props = {
+  params: { id: string };
+  searchParams: { [id: string]: string };
+};

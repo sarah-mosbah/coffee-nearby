@@ -35,6 +35,7 @@ export const fetchCoffeeStores = async (longLat: string, limit: number) => {
       );
   } catch (error: unknown) {
     console.error(`Error Occured while fetching Data ${error}`);
+    return [];
   }
 };
 

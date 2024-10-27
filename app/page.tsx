@@ -5,6 +5,14 @@ import NearbyStores from "@/components/nearby-stores.client";
 import { DUBAI_LONG_LAT } from "./lib/constants";
 
 const getData = async (): Promise<CoffeeStoreType[]> => {
+  if (
+    !process.env.MAP_BOX_API ||
+    !process.env.UNSPLASH_ACCESS_KEY ||
+    !process.env.AIRTABLE_TOKEN
+  ) {
+    throw new Error("Api Key is Missing");
+  }
+
   return fetchCoffeeStores(DUBAI_LONG_LAT, 10);
 };
 

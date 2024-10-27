@@ -22,8 +22,6 @@ export const useTrackLocation = () => {
     setLongLat(`${longitude},${latitude}`);
 
     setLocationErrorMessage("");
-
-    console.log("lat", latitude, "lng", longitude);
   };
 
   const error = () => {
